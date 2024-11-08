@@ -1,45 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go-backend
+  name: backend
+  namespace: my-app
 spec:
-  replicas: 1
+  replicas: 2  # You can adjust based on your need
   selector:
     matchLabels:
-      app: go-backend
+      app: backend
   template:
     metadata:
       labels:
-        app: go-backend
+        app: backend
     spec:
       containers:
-      - name: go-backend
-        image: go-backend:latest  # Replace with your Docker image
-        ports:
-        - containerPort: 8080
-        env:
-        - name: DB_HOST
-          value: "postgres-db"
-        - name: DB_USER
-          value: "admin"
-        - name: DB_PASSWORD
-          value: "password"
-        - name: DB_NAME
-          value: "mydb"
-        - name: DB_PORT
-          value: "5432"
-        - name: ALLOWED_ORIGINS
-          value: "*"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: go-backend-service
-spec:
-  selector:
-    app: go-backend
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
-  type: LoadBalancer
+        - name: backend
+          image: your-backend-image:latest  # Replace with your actual image
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: "db"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: "postgres"
+            - name: DB_PASSWORD
+              value: "postgres"
+            - name: DB_NAME
+              value: "postgres"
