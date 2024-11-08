@@ -1,11 +1,20 @@
-FROM golang:1.19 AS build
-WORKDIR /app
-COPY . .
-RUN go mod tidy
-RUN go build -o backend main.go
+# Use the official golang image as the base image
+FROM golang:latest
 
-FROM alpine:latest
-WORKDIR /root/
-COPY --from=build /app/backend .
-EXPOSE 8080
-CMD ["./backend"]
+# Set the Current Working Directory inside the container
+WORKDIR /app
+
+# Copy go mod and sum files
+COPY go.mod go.sum ./
+
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+RUN go mod download
+
+# Copy the source code into the container
+COPY . .
+
+# Build the Go app
+RUN go build -o main .
+
+# Command to run the executable
+CMD ["./main"]
