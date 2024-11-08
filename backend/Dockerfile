@@ -17,4 +17,4 @@ COPY . .
 RUN go build -o main .
 
 # Command to run the executable
-CMD ["./main"]
+CMD DB_HOST=172.17.0.2 DB_USER=postgres DB_PASSWORD=postgres DB_NAME=postgres DB_PORT=5432 ALLOWED_ORIGINS=* go run main.go
